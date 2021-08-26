@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+
+<head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+<title>{{ question.question_text }} | Ankiety Django</title>
+<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUc52pihcAfRgd9szmkQjVSk0kDxKN9KQ7TA2uxTGiapGy0Im-ZP1lkYeZ0GhdTZzV4_s&usqp=CAU">
+</head>
+
+<body>
+
+<style>
+    .nounderline {
+    text-decoration: none
+    }
+</style>
+
+<div class ="row my-custom-row justify-content-start align-items-start">
+        <div class=col-sm-12"><div class="p-3 mb-2 bg-info bg-opacity-25"><a class="fs-2 text-dark nounderline" href="/">Ankiety Django</a></div></div>
+</div>
+<form action="{% url 'polls:wybory' question.slug %}" method="POST">
+{% csrf_token %}
+<fieldset>
+    <legend><h3>{{ question.question_text }}</h3></legend>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    {% for choice in question.choice_set.all %}
+        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+    {% endfor %}
+</fieldset>
+    <br>
+<input class="btn btn-primary" type="submit" value="Głosuj">
+
+</form>
+
+<br>
+{% for comment in question.comments.all %}
+    <div class="comment">
+        <div class="date">{{ comment.created_date }}</div>
+        <strong>{{ comment.autor }}</strong>
+        <p>{{ comment.tekst|linebreaks }}</p>
+    </div>
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'polls:delete' comment.id %}">
+                {% csrf_token %}
+                <input type="submit" value="Usuń">
+        </form>
+    {% endif %}
+{% empty %}
+    <p>Brak komentarzy :(</p>
+{% endfor %}
+<br>
+{% block content %}
+    <h3>Nowy komentarz</h3>
+    <form action="{% url 'polls:komentarze' question.slug %}" method="POST" class="post-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary" type="submit" >Wyślij</button>
+    </form>
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+</body>
+</html>

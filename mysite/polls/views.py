@@ -1,9 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.views import generic
+from django.views import generic, View
 from django.utils import timezone
-from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from .models import Choice, Question, Comment
 from .forms import CommentForm
@@ -38,37 +39,43 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 
-def vote(request, slug):
-    question = get_object_or_404(Question, slug=slug)
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        return render(request, 'polls/detail.html', {
-            'question': question,
-            'error_message': "Nie wybrałeś żadnej opcji.",
-        })
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        return HttpResponseRedirect(reverse('polls:results', args=(question.slug,)))
+class VoteView(View):
+
+    def post(self, request, slug):
+        question = get_object_or_404(Question, slug=slug)
+        try:
+            selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        except (KeyError, Choice.DoesNotExist):
+            return render(request, 'polls/detail.html', {
+                'question': question,
+                'error_message': "Nie wybrałeś żadnej opcji.",
+            })
+        else:
+            selected_choice.votes += 1
+            selected_choice.save()
+            return HttpResponseRedirect(reverse('polls:results', args=(question.slug,)))
 
 
-def add_comment_to_question(request, slug):
-    question = get_object_or_404(Question, slug=slug)
-    if request.method == "POST":
-        form = CommentForm(request.POST)
+class CommentView(generic.FormView):
+    form_class = CommentForm
+    template_name = 'polls/detail.html'
+
+    def post(self, request, slug):
+        question = get_object_or_404(Question, slug=slug)
+        form = self.form_class(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.question = question
             comment.save()
             return HttpResponseRedirect(reverse('polls:detail', args=(question.slug,)))
-    else:
-        form = CommentForm()
-    return render(request, 'polls/detail.html', {'question': question, 'form': form})
+        return render(request, self.template_name, {'question': question, 'form': form})
 
 
-@login_required
-def delete_comment(request, slug):
-    comment = get_object_or_404(Comment, id=slug)
-    comment.delete()
-    return HttpResponseRedirect(reverse('polls:detail', args=(comment.question.slug,)))
+class DeleteCommentView(View):
+
+    @method_decorator(login_required)
+    def post(self, request, slug):
+        comment = get_object_or_404(Comment, id=slug)
+        comment.delete()
+        return HttpResponseRedirect(reverse('polls:detail', args=(comment.question.slug,)))
+        pass

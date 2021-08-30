@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.views import generic, View
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 
 from .models import Choice, Question, Comment
 from .forms import CommentForm
@@ -46,9 +47,9 @@ class VoteView(View):
         try:
             selected_choice = question.choice_set.get(pk=request.POST['choice'])
         except (KeyError, Choice.DoesNotExist):
+            messages.error(request, "Error...")
             return render(request, 'polls/detail.html', {
                 'question': question,
-                'error_message': "Nie wybrałeś żadnej opcji.",
             })
         else:
             selected_choice.votes += 1

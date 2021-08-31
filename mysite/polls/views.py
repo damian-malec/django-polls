@@ -18,7 +18,7 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Question.objects.filter(
             pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:5]
+        ).order_by('-pub_date')[:10]
 
 
 class DetailView(generic.DetailView):
@@ -32,12 +32,18 @@ class DetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm()
         context['comments'] = Comment.objects.filter(question=self.object.id)
+        context['question_list'] = Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:10]
         return context
 
 
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['question_list_results'] = Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:10]
+        return context
 
 
 class VoteView(View):

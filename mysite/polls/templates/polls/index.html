@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="pl">
+<html>
 
 <head>
 
@@ -12,83 +12,56 @@
   <title>Ankiety Django</title>
   <link rel="icon" href="https://t3.ftcdn.net/jpg/04/28/21/80/360_F_428218002_8455FcNtK3lreWU4KPdCEL8EPPTxN27L.jpg">
 
-  <!-- Custom fonts for this template-->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-  <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
 
 </head>
 
 <body id="page-top">
 
-  <!-- Page Wrapper -->
-  <div id="wrapper">
+    <div id="wrapper">
 
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
+            <br>
+        {% if latest_question_list %}
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+                <div class="btn btn-light btn-circle btn-lg">
+                    <i class="fas fa-vote-yea"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Ankiety Django</div>
+            </a>
+            <br>
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-info-circle"></i>
+                    <span>O stronie</span></a>
+            </li>
+            <hr class="sidebar-divider my-0">
+            {% for question in latest_question_list %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'polls:detail' question.slug %}">
+                        <i class="fas fa-check-circle"></i>
+                    <span>{{ question.question_text }}</span></a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <p>Brak dostępnych ankiet.</p>
+        {% endif %}
+        </ul>
 
-      <!-- Sidebar - Brand -->
-      <br>
-      {% if latest_question_list %}
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
-          <div class="btn btn-light btn-circle btn-lg">
-            <i class="fas fa-vote-yea"></i>
-          </div>
-          <div class="sidebar-brand-text mx-3">Ankiety Django</div>
-        </a>
-        <br>
-        <hr class="sidebar-divider my-0">
-        <li class="nav-item active">
-          <a class="nav-link" href="">
-            <i class="fas fa-info-circle"></i>
-            <span>O stronie</span></a>
-        </li>
-        <hr class="sidebar-divider my-0">
-        {% for question in latest_question_list %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'polls:detail' question.slug %}">
-              <i class="fas fa-check-circle"></i>
-              <span>{{ question.question_text }}</span></a>
-          </li>
-        {% endfor %}
-      {% else %}
-        <p>Brak dostępnych ankiet.</p>
-    {% endif %}
-
-    </ul>
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-
-      <!-- Main Content -->
-      <div id="content">
-
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-
-          <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
-            <h1 class="h3 mb-0 text-gray-800">Ankiety Django - o stronie</h1>
-          </div>
-
-          <!-- Main Content Here -->
-
-
-
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                        <h1 class="h3 mb-0 text-gray-800">Ankiety Django - O stronie</h1>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- /.container-fluid -->
-
-      </div>
-      <!-- End of Main Content -->
 
     </div>
-    <!-- End of Content Wrapper -->
-
-  </div>
-  <!-- End of Page Wrapper -->
 
 </body>
 

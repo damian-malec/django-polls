@@ -9,7 +9,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Ankiety Django</title>
+  <title>{{ question.question_text }} | Ankiety Django</title>
   <link rel="icon" href="https://t3.ftcdn.net/jpg/04/28/21/80/360_F_428218002_8455FcNtK3lreWU4KPdCEL8EPPTxN27L.jpg">
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
@@ -20,83 +20,89 @@
 
 <body id="page-top">
 
-  <div id="wrapper">
-    <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
-      <br>
-      {% if latest_question_list %}
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
-          <div class="btn btn-light btn-circle btn-lg">
-            <i class="fas fa-vote-yea"></i>
-          </div>
-          <div class="sidebar-brand-text mx-3">Ankiety Django</div>
-        </a>
-        <br>
-        <hr class="sidebar-divider my-0">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">
-            <i class="fas fa-info-circle"></i>
-            <span>O stronie</span></a>
-        </li>
-        <hr class="sidebar-divider my-0">
-        {% for question in latest_question_list %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'polls:detail' question.slug %}">
-              <i class="fas fa-check-circle"></i>
-              <span>{{ question.question_text }}</span></a>
-          </li>
-        {% endfor %}
-      {% else %}
-        <p>Brak dostępnych ankiet.</p>
-      {% endif %}
-      </ul>
-      <div id="content-wrapper" class="d-flex flex-column">
-        <div id="content">
-          <div class="container-fluid">
-            <form action="{% url 'polls:vote' question.slug %}" method="POST">
-            {% csrf_token %}
-            <fieldset>
-            <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
-              <h1 class="h3 mb-0 text-gray-800">{{ question.question_text }}</h1>
-            </div>
-            {% include 'polls/includes/messages.html' %}
-            {% for choice in question.choice_set.all %}
-              <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-              <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
-            {% endfor %}
-            </fieldset>
-              <br>
-            <input class="btn btn-primary" type="submit" value="Głosuj">
-            </form>
-              <br>
-            {% for comment in question.comments.all %}
-              <div class="comment">
-                <div class="date">{{ comment.created_date }}</div>
-                <strong>{{ comment.autor }}</strong>
-                <p>{{ comment.tekst|linebreaks }}</p>
-              </div>
-              {% if user.is_authenticated %}
-                <form method="post" action="{% url 'polls:delete' comment.id %}">
-                  {% csrf_token %}
-                  <input class="btn btn-primary" type="submit" value="Usuń">
-                </form>
-              {% endif %}
-            {% empty %}
-              <p>Brak komentarzy :(</p>
-            {% endfor %}
-              <br>
-            {% block content %}
-              <h3>Nowy komentarz</h3>
-              <form action="{% url 'polls:comment' question.slug %}" method="POST" class="post-form">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn btn-primary" type="submit" >Wyślij</button>
-              </form>
-            {% endblock %}
-          </div>
-        </div>
-      </div>
-  </div>
+    <div id="wrapper">
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+        <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
+            <br>
+        {% if question_list %}
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+                <div class="btn btn-light btn-circle btn-lg">
+                    <i class="fas fa-vote-yea"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Ankiety Django</div>
+            </a>
+            <br>
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-info-circle"></i>
+                    <span>O stronie</span></a>
+            </li>
+            <hr class="sidebar-divider my-0">
+            {% for question in question_list %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'polls:detail' question.slug %}">
+                        <i class="fas fa-check-circle"></i>
+                    <span>{{ question.question_text }}</span></a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <p>Brak dostępnych ankiet.</p>
+        {% endif %}
+        </ul>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <div class="container-fluid">
+                <form action="{% url 'polls:vote' question.slug %}" method="POST">
+                {% csrf_token %}
+                    <fieldset>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                        <h1 class="h3 mb-0 text-gray-800">{{ question.question_text }}</h1>
+                    </div>
+                    {% include 'polls/includes/messages.html' %}
+                    {% for choice in question.choice_set.all %}
+                        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
+                        <br>
+                    {% endfor %}
+                    </fieldset>
+                        <br>
+                    <input class="btn btn-primary" type="submit" value="Głosuj">
+                </form>
+                    <br>
+
+                {% for comment in question.comments.all %}
+                    <div class="comment">
+                        <div class="date">{{ comment.created_date }}</div>
+                            <strong>{{ comment.autor }}</strong>
+                            <p>{{ comment.tekst|linebreaks }}</p>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'polls:delete' comment.id %}">
+                    {% csrf_token %}
+                        <input class="btn btn-primary" type="submit" value="Usuń">
+                    </form>
+                    {% endif %}
+                {% empty %}
+                    <p>Brak komentarzy :(</p>
+                {% endfor %}
+                    <br>
+
+                {% block content %}
+                    <h3>Nowy komentarz</h3>
+                    <form action="{% url 'polls:comment' question.slug %}" method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                        <button class="btn btn-primary" type="submit" >Wyślij</button>
+                    </form>
+                {% endblock %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </body>
+
 </html>

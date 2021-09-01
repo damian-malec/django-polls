@@ -54,9 +54,7 @@ class VoteView(View):
             selected_choice = question.choice_set.get(pk=request.POST['choice'])
         except (KeyError, Choice.DoesNotExist):
             messages.error(request, "Error...")
-            return render(request, 'polls/detail.html', {
-                'question': question,
-            })
+            return HttpResponseRedirect(reverse('polls:detail', args=(question.slug,)))
         else:
             selected_choice.votes += 1
             selected_choice.save()

@@ -51,18 +51,28 @@
         {% endif %}
         </ul>
 
-        <div id="content-wrapper" class="d-flex flex-column">
-            <div id="content">
-                <div class="container-fluid">
-                    <div class="d-flex flex-column align-items-right justify-content-between mb-4 mt-4">
-                        <h1 class="h3 mb-0 text-gray-800">{{ question.question_text }}</h1>
-                            <br>
-                        <ul>
-                        {% for choice in question.choice_set.all %}
-                            <p>{{ choice.choice_text }} -- {{ choice.votes }} głos{{ choice.votes|pluralize:"ów" }}</p>
-                        {% endfor %}
-                        </ul>
-                            <a href="{% url 'polls:detail' question.slug %}">Głosujesz jeszcze raz?</a>
+        <div class="container-fluid">
+            {% include 'polls/includes/messages.html' %}
+                <br>
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Wyniki</h6>
+                        </div>
+                        <div class="card-body">
+                                <br>
+                            <h1 class="h3 mb-0 text-gray-800">{{ question.question_text }}</h1>
+                                <br>
+                            <ul>
+                            {% for choice in question.choice_set.all %}
+                                <p>{{ choice.choice_text }} -- {{ choice.votes }} głos{{ choice.votes|pluralize:"ów" }}</p>
+                            {% endfor %}
+                            </ul>
+                                <a href="{% url 'polls:detail' question.slug %}">Głosujesz jeszcze raz?</a>
+                                    <br>
+                                <br>
+                        </div>
                     </div>
                 </div>
             </div>

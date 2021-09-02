@@ -49,7 +49,7 @@ class Comment(models.Model):
         self.save()
 
     class Meta:
-        ordering = ['created_date']
+        ordering = ['-created_date']
 
     def __str__(self):
         return 'Komentarz {} autorstwa {}'.format(self.tekst, self.autor)

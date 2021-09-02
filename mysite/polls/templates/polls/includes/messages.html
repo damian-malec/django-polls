@@ -1,7 +1,15 @@
 {% if messages %}
-<ul class="messages">
     {% for message in messages %}
-    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        <div class="alert {{ message.tags }} m-2" id="msg" role="alert">
+            <strong>{{ message }}</strong>
+        </div>
     {% endfor %}
-</ul>
 {% endif %}
+
+    <script>
+        setTimeout(function(){
+            if ($('#msg').length > 0) {
+                $('#msg').remove();
+            }
+        }, 5000)
+    </script>

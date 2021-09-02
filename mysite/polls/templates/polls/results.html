@@ -5,16 +5,21 @@
 
 <head>
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{{ question.question_text }} | Ankiety Django</title>
-  <link rel="icon" href="https://t3.ftcdn.net/jpg/04/28/21/80/360_F_428218002_8455FcNtK3lreWU4KPdCEL8EPPTxN27L.jpg">
+    <title>{{ question.question_text }} | Ankiety Django</title>
+    <link rel="icon" href="https://t3.ftcdn.net/jpg/04/28/21/80/360_F_428218002_8455FcNtK3lreWU4KPdCEL8EPPTxN27L.jpg">
 
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="{% static 'css/comments.css' %}" rel="stylesheet">
 
 </head>
 
@@ -66,10 +71,16 @@
                                 <br>
                             <ul>
                             {% for choice in question.choice_set.all %}
-                                <p>{{ choice.choice_text }} -- {{ choice.votes }} głos{{ choice.votes|pluralize:"ów" }}</p>
+                                <p class="text-start"><strong>{{ choice.choice_text }}</strong> = {{ choice.votes }}</p>
                             {% endfor %}
                             </ul>
-                                <a href="{% url 'polls:detail' question.slug %}">Głosujesz jeszcze raz?</a>
+                                <br>
+                                <a href="{% url 'polls:detail' question.slug %}" class="btn btn-primary btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-question"></i>
+                                    </span>
+                                    <span class="text">Głosujesz jeszcze raz?</span>
+                                </a>
                                     <br>
                                 <br>
                         </div>

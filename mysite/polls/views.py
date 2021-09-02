@@ -53,11 +53,12 @@ class VoteView(View):
         try:
             selected_choice = question.choice_set.get(pk=request.POST['choice'])
         except (KeyError, Choice.DoesNotExist):
-            messages.error(request, "Error...")
+            messages.error(request, "Nie wybrałeś żadnej opcji!")
             return HttpResponseRedirect(reverse('polls:detail', args=(question.slug,)))
         else:
             selected_choice.votes += 1
             selected_choice.save()
+            messages.success(request, "Brawo, głos został oddany!")
             return HttpResponseRedirect(reverse('polls:results', args=(question.slug,)))
 
 
@@ -72,6 +73,7 @@ class CommentView(generic.FormView):
             comment = form.save(commit=False)
             comment.question = question
             comment.save()
+            messages.success(request, "Brawo, dodałeś komentarz!")
             return HttpResponseRedirect(reverse('polls:detail', args=(question.slug,)))
         return render(request, self.template_name, {'question': question, 'form': form})
 

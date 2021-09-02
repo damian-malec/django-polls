@@ -5,16 +5,21 @@
 
 <head>
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{{ question.question_text }} | Ankiety Django</title>
-  <link rel="icon" href="https://t3.ftcdn.net/jpg/04/28/21/80/360_F_428218002_8455FcNtK3lreWU4KPdCEL8EPPTxN27L.jpg">
+    <title>{{ question.question_text }} | Ankiety Django</title>
+    <link rel="icon" href="https://t3.ftcdn.net/jpg/04/28/21/80/360_F_428218002_8455FcNtK3lreWU4KPdCEL8EPPTxN27L.jpg">
 
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="{% static 'css/comments.css' %}" rel="stylesheet">
 
 </head>
 
@@ -55,7 +60,7 @@
             {% include 'polls/includes/messages.html' %}
                 <br>
             <div class="row">
-                <div class="col-lg-5">
+                <div class="col-lg-8">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Co wybierasz?</h6>
@@ -87,26 +92,41 @@
                             </form>
                         </div>
                     </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <img width="100%" src="https://wolomin.org/wp-content/uploads/2018/10/vote-2831241_1280.png">
+                        </div>
+                        <br>
+                            <p class="text-center h2">Głosuj!</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-lg-5">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Komentarze</h6>
                         </div>
-                        <div class="card-body">
+                        <div class="comment-widgets">
                             {% for comment in question.comments.all %}
-                            <div class="comment">
-                                <br>
-                            <div class="date">{{ comment.created_date }}</div>
-                                <strong>{{ comment.autor }}</strong>
-                                <p>{{ comment.tekst|linebreaks }}</p>
+                            <div class="d-flex flex-row comment-row m-t-0">
+                                <div class="comment-text w-100">
+                                    <h6 class="font-medium"><strong>{{ comment.autor }}</strong></h6> <span class="m-b-15 d-block">{{ comment.tekst|linebreaks }}</span>
+                                    <div class="comment-footer">
+                                        <span class="text-muted float-right">{{ comment.created_date }}</span>
+                                        {% if user.is_authenticated %}
+                                        <form method="post" action="{% url 'polls:delete' comment.id %}">
+                                            {% csrf_token %}
+                                            <input class="btn btn-danger btn-sm" type="submit" value="Usuń">
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
-                                {% if user.is_authenticated %}
-                                <form method="post" action="{% url 'polls:delete' comment.id %}">
-                                {% csrf_token %}
-                                    <input class="btn btn-primary" type="submit" value="Usuń">
-                                </form>
-                                {% endif %}
                             {% empty %}
-                                <p>Brak komentarzy :(</p>
+                                    <br>
+                                <p  style="text-indent: 3%;">Brak komentarzy :(</p>
                             {% endfor %}
                         </div>
                     </div>
@@ -120,8 +140,22 @@
                             {% block content %}
                             <form action="{% url 'polls:comment' question.slug %}" method="POST" class="post-form">
                             {% csrf_token %}
-                            {{ form.as_p }}
-                                <button class="btn btn-primary" type="submit" >Wyślij</button>
+                                <div class="form-group">
+                                    <label>Autor</label>
+                                        <input type="text" name="autor" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Wiadomość</label>
+                                        <textarea name="tekst" cols="30" rows="8" class="form-control" style="background-color: white;"></textarea>
+                                </div>
+                                <div>
+                                    <a class="btn btn-primary btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+                                        <button class="btn btn-primary" type="submit" >Wyślij</button>
+                                    </a>
+                                </div>
                             </form>
                             {% endblock %}
                         </div>

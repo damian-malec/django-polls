@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 
 from .models import Choice, Question, Comment
-from .forms import CommentForm
+from .forms import CommentForm, ChoiceForm
 
 
 class IndexView(generic.ListView):
@@ -31,6 +31,7 @@ class DetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm()
+        context['form_vote'] = ChoiceForm()
         context['comments'] = Comment.objects.filter(question=self.object.id)
         context['question_list'] = Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:10]
         return context
@@ -46,27 +47,34 @@ class ResultsView(generic.DetailView):
         return context
 
 
-class VoteView(View):
+class VoteView(generic.FormView):
+    form_class = ChoiceForm
+    question = None
 
-    def post(self, request, slug):
-        question = get_object_or_404(Question, slug=slug)
-        try:
-            selected_choice = question.choice_set.get(pk=request.POST['choice'])
-        except (KeyError, Choice.DoesNotExist):
-            messages.error(request, "Nie wybrałeś żadnej opcji!")
-            return HttpResponseRedirect(reverse('polls:detail', args=(question.slug,)))
-        else:
-            selected_choice.votes += 1
-            selected_choice.save()
-            messages.success(request, "Brawo, głos został oddany!")
-            return HttpResponseRedirect(reverse('polls:results', args=(question.slug,)))
+    def form_valid(self, form):
+        selected_choice = self.question.choice_set.get(pk=1)
+        selected_choice.votes += 1
+        selected_choice.save()
+        messages.success(self.request, "Brawo, głos został oddany!")
+        return HttpResponseRedirect(reverse('polls:results', args=(self.question.slug,)))
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Nie wybrałeś żadnej opcji!")
+        return HttpResponseRedirect(reverse('polls:detail', args=(self.question.slug,)))
+
+    def get_form_kwargs(self):
+        pass
+
+    def post(self, request, slug, **kwargs):
+        self.question = get_object_or_404(Question, slug=slug)
+        return super(VoteView, self).post(self, request, slug, **kwargs)
 
 
 class CommentView(generic.FormView):
     form_class = CommentForm
     template_name = 'polls/detail.html'
 
-    def post(self, request, slug):
+    def post(self, request, slug, **kwargs):
         question = get_object_or_404(Question, slug=slug)
         form = self.form_class(request.POST)
         if form.is_valid():

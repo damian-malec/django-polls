@@ -60,7 +60,7 @@
             {% include 'polls/includes/messages.html' %}
                 <br>
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-10">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Co wybierasz?</h6>
@@ -72,11 +72,7 @@
                                 <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
                                     <h1 class="h3 mb-0 text-gray-800">{{ question.question_text }}</h1>
                                 </div>
-                                {% for choice in question.choice_set.all %}
-                                    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-                                        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label>
-                                    <br>
-                                {% endfor %}
+                                {{ form_vote }}
                                 </fieldset>
                                     <br>
                                 <div>
@@ -91,16 +87,6 @@
                                 <br>
                             </form>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="card shadow mb-4">
-                        <div class="card-body">
-                            <img width="100%" src="https://wolomin.org/wp-content/uploads/2018/10/vote-2831241_1280.png">
-                        </div>
-                        <br>
-                            <p class="text-center h2">Głosuj!</p>
-                        <br>
                     </div>
                 </div>
                 <div class="col-lg-5">

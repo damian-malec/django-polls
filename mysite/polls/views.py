@@ -50,9 +50,10 @@ class ResultsView(generic.DetailView):
 class VoteView(generic.FormView):
     form_class = ChoiceForm
     question = None
+    success_url = "wyniki"
 
     def form_valid(self, form):
-        selected_choice = self.question.choice_set.get(pk=1)
+        selected_choice = self.question.choice_set.get(pk=self.kwargs['choice_id'])
         selected_choice.votes += 1
         selected_choice.save()
         messages.success(self.request, "Brawo, głos został oddany!")
@@ -67,7 +68,7 @@ class VoteView(generic.FormView):
 
     def post(self, request, slug, **kwargs):
         self.question = get_object_or_404(Question, slug=slug)
-        return super(VoteView, self).post(self, request, slug, **kwargs)
+        return super(VoteView, self).form_valid(self)
 
 
 class CommentView(generic.FormView):

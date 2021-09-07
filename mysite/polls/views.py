@@ -1,13 +1,14 @@
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+
 from django.views import generic, View
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 
-from .models import Choice, Question, Comment
+from .models import Question, Comment
 from .forms import CommentForm, ChoiceForm
 
 

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comment
+from .models import Comment, Choice
 
 class CommentForm(forms.ModelForm):
 
@@ -8,16 +8,19 @@ class CommentForm(forms.ModelForm):
         fields = ('autor', 'tekst',)
 
 
-class ChoiceForm(forms.Form):
+class ChoiceForm(forms.ModelForm):
     choice_text = forms.ChoiceField(choices=(
-        ('1', 'test1'),
-        ('2', 'test2'),
-        ('3', 'test3'),
-    ))
+        ('1', 'opcja 1'),
+        ('2', 'opcja 2'),
+        ('3', 'opcja 3'),
+    ),
+        widget=forms.RadioSelect(attrs={'id': 'value'})
+    )
 
     class Meta:
+        model = Choice
         fields = ('choice_text',)
 
-        widgets = {
-            'choice_text': forms.RadioSelect(attrs={'class': 'form-control'}),
-        }
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # self.fields['choice_text'].choices = [('1','xxx')]

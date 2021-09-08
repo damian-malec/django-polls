@@ -58,11 +58,11 @@ class VoteView(generic.FormView):
         selected_choice.votes += 1
         selected_choice.save()
         messages.success(self.request, "Brawo, głos został oddany!")
-        return HttpResponseRedirect(reverse('polls:results', args=(self.question.slug,)))
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         messages.error(self.request, "Nie wybrałeś żadnej opcji!")
-        return HttpResponseRedirect(reverse('polls:detail', args=(self.question.slug,)))
+        return super().form_invalid(form)
 
     def get_form_kwargs(self):
         pass

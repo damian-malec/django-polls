@@ -23,4 +23,5 @@ class ChoiceForm(forms.ModelForm):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            # self.fields['choice_text'].choices = [('1','xxx')]
+            self.fields['choice_text'].choices = [('1','xxx')]
+            breakpoint()

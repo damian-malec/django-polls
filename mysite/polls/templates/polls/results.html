@@ -76,6 +76,7 @@
                             </ul>
                                 <br>
                                 <a href="{% url 'polls:detail' question.slug %}" class="btn btn-primary btn-icon-split">
+                                {% csrf_token %}
                                     <span class="icon text-white-50">
                                         <i class="fas fa-question"></i>
                                     </span>

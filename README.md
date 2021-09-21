@@ -1,2 +1,2 @@
 # django-polls
-Aplikacja ankietowa django.
+Strona poświęcona ankietom stworzona w frameworku Django.

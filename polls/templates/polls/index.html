@@ -1,0 +1,87 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Ankiety Django</title>
+  <link rel="icon" href="https://t3.ftcdn.net/jpg/04/28/21/80/360_F_428218002_8455FcNtK3lreWU4KPdCEL8EPPTxN27L.jpg">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <div id="wrapper">
+
+        <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
+            <br>
+        {% if latest_question_list %}
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+                <div class="btn btn-light btn-circle btn-lg">
+                    <i class="fas fa-vote-yea"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Ankiety Django</div>
+            </a>
+            <br>
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-info-circle"></i>
+                    <span>O stronie</span></a>
+            </li>
+            <hr class="sidebar-divider my-0">
+            {% for question in latest_question_list %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'polls:detail' question.slug %}">
+                        <i class="fas fa-check-circle"></i>
+                    <span>{{ question.question_text }}</span></a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <p>Brak dostępnych ankiet.</p>
+        {% endif %}
+        </ul>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+                <br>
+            <div class="col-lg-10">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Ankiety Django - O stronie</h6>
+                    </div>
+                    <div class="card-body">
+                        Strona poświęcona ankietom stworzona w frameworku Django.
+                    </div>
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Badania ankietowe - co to?</h6>
+                    </div>
+                    <div class="card-body">
+                        Jedna z metod badań społecznych, w której do zbierania informacji od respondentów wykorzystuje się wystandaryzowany kwestionariusz.
+                        Dla ustalenia badanej populacji konsumentów stosuje się dobór losowy, gdy niewielka jest ich liczba i nieznana ich struktura, dobór losowy systematyczny,
+                        gdy dostępna jest lista całej populacji oraz dobór losowy warstwowy dla uzyskania bardziej dokładnych wyników charakteryzujących badanych.
+                        <a href="https://pl.wikipedia.org/wiki/Badania_ankietowe">Więcej informacji.</a>
+                    </div>
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="card-body text-center">
+                        <img width="30%" src="https://www.biuromilenium.pl/templates/milenium/images/designer/d620db7544dd6609ccf2602db76e7ea7_znakizapytania.png">
+                        <img width="30%" src="https://www.biuromilenium.pl/templates/milenium/images/designer/d620db7544dd6609ccf2602db76e7ea7_znakizapytania.png">
+                        <img width="30%" src="https://www.biuromilenium.pl/templates/milenium/images/designer/d620db7544dd6609ccf2602db76e7ea7_znakizapytania.png">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

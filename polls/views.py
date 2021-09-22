@@ -54,7 +54,7 @@ class VoteView(generic.FormView):
     success_url = "wyniki"
 
     def form_valid(self, form):
-        selected_choice = self.question.choice_set.get(pk=self.kwargs['choice_id'])
+        selected_choice = self.question.choice_set.get(pk=1)
         selected_choice.votes += 1
         selected_choice.save()
         messages.success(self.request, "Brawo, głos został oddany!")
@@ -64,12 +64,10 @@ class VoteView(generic.FormView):
         messages.error(self.request, "Nie wybrałeś żadnej opcji!")
         return super().form_invalid(form)
 
-    def get_form_kwargs(self):
-        pass
-
-    def post(self, request, slug, **kwargs):
+    def post(self, request, slug, *args, **kwargs):
+        print("lalalal")
         self.question = get_object_or_404(Question, slug=slug)
-        return super(VoteView, self).form_valid(self)
+        return super(VoteView, self).post(request, *args, **kwargs)
 
 
 class CommentView(generic.FormView):

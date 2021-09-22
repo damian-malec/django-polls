@@ -3,4 +3,5 @@
 __pycache__
 /mysite/local.py
 .idea/
+static/
 .DS_Store

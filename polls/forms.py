@@ -9,17 +9,19 @@ class CommentForm(forms.ModelForm):
 
 
 class ChoiceForm(forms.Form):
+
     choice_text = forms.ChoiceField(choices=(
         ('1', 'opcja 1'),
         ('2', 'opcja 2'),
         ('3', 'opcja 3'),
     ),
-        widget=forms.RadioSelect(attrs={'class': 'star'})
+        widget=forms.RadioSelect(attrs={'class': 'ChoiceForm', 'placeholder': 'Your choice',})
     )
 
-    class Meta:
-        model = Choice
-        fields = ('choice_text',)
+    # class Meta:
+    #     model = Choice
+    #     fields = ('choice_text',)
+    #     widgets = {'choice_text': forms.RadioSelect(attrs={'class': 'ChoiceForm', 'placeholder': 'Your choice',})}
 
         # def __init__(self, *args, **kwargs):
         #    super().__init__(*args, **kwargs)

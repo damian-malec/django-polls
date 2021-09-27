@@ -50,24 +50,35 @@ class ResultsView(generic.DetailView):
 
 class VoteView(generic.FormView):
     form_class = ChoiceForm
-    question = None
-    success_url = "wyniki"
+    template_name = 'polls/detail.html'
 
-    def form_valid(self, form):
-        selected_choice = self.question.choice_set.get(pk=1)
-        selected_choice.votes += 1
-        selected_choice.save()
-        messages.success(self.request, "Brawo, głos został oddany!")
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        messages.error(self.request, "Nie wybrałeś żadnej opcji!")
-        return super().form_invalid(form)
+    # def form_valid(self, form):
+    #     selected_choice = form.cleaned_data.get['choice_text']
+    #     selected_choice.votes += 1
+    #     selected_choice.save()
+    #     messages.success(self.request, "Brawo, głos został oddany!")
+    #     return super(VoteView, self).form_valid(form)
+    #
+    # def form_invalid(self, form):
+    #     messages.error(self.request, "Nie wybrałeś żadnej opcji!")
+    #     return HttpResponseRedirect(reverse('polls:detail', args=(self.question.slug,)))
+    #
+    # def post(self, request, slug, *args, **kwargs):
+    #     self.question = get_object_or_404(Question, slug=slug)
+    #     return super(VoteView, self).post(request, *args, **kwargs)
 
     def post(self, request, slug, *args, **kwargs):
-        print("lalalal")
-        self.question = get_object_or_404(Question, slug=slug)
-        return super(VoteView, self).post(request, *args, **kwargs)
+        question = get_object_or_404(Question, slug=slug)
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            # selected_choice = form.cleaned_data['choice_text']
+            # ...
+            messages.success(request, "Brawo, głos został oddany!")
+            return HttpResponseRedirect(reverse('polls:results', args=(question.slug,)))
+        else:
+            messages.error(request, "Nie wybrałeś żadnej opcji!")
+            return HttpResponseRedirect(reverse('polls:detail', args=(question.slug,)))
+        return render(request, self.template_name, {'question':question, 'form':form})
 
 
 class CommentView(generic.FormView):

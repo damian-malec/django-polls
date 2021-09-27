@@ -62,7 +62,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Co wybierasz?</h6>
                         </div>
                         <div class="card-body">
-                            <form action="{% url 'polls:vote' question.slug %}" method="POST">
+                            <form action="{% url 'polls:vote' question.slug %}" method="POST" novalidate="novalidate">
                             {% csrf_token %}
                                 <fieldset>
                                 <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">

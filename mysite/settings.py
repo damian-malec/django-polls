@@ -148,3 +148,5 @@ MESSAGE_TAGS = {
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda _request: DEBUG
 }
+
+from .local import *
